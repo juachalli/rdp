@@ -14,6 +14,53 @@ La aplicación puede ser utilizada por varias empresas simultaneamente gracias a
 - **Notificaciones**: Sistema de notificaciones para mantener a los empleados informados sobre noticias y actualizaciones de la empresa
 - **Multiidioma**: Entorno personalizado con traducciones a Valenciano/Castellano/Inglés
 
+
+## Funcionalidad
+
+Existirán 3 roles o tipos de usuarios.
+- Trabajador (ROLE_USER)
+- Supervisor (ROLE_SUPER)
+- Administrador (ROLE_ADMINISTRADOR)
+
+### Trabajador (ROLE_USER)
+- Fichajes: entrada/salida manual y automática, solicitud de correcciones.
+- Historial y reportes exportables a diferentes formatos.
+- Ausencias parciales y totales, solicitudes y adjuntar justificantes.
+- Vacaciones: solicitud, gestión por estados, visualización en calendario, descuento de saldo anual.
+- Recibir notificaciones internas.
+- Asociación a Supervisor para validación.
+- Descarga de reportes personales.
+
+### Supervisor (ROLE_SUPER)
+- Hereda las funcionalidades del Trabajador
+- Consulta y exportación de fichajes del equipo.
+- Validación de fichajes anómalos y ausencias.
+- Validación y seguimiento de vacaciones del equipo.
+- Emisión de notificaciones al equipo.
+- Informes de equipo detallados.
+
+### Administrador (ROLE_ADMINISTRADOR)
+- Hereda funcionalidades de Supervisor y Trabajador.
+- Gestión avanzada de usuarios y asignaciones.
+- Configuración global de calendarios, políticas, tipos de ausencias.
+- Notificaciones globales.
+- Informes avanzados (comparativas, horas extras, globales).
+- Supervisión global.
+
+
+### Requerimientos Adicionales
+- **Multi-idioma:** Valencià, Castellano, English.
+- **Histórico:** Actividad reciente en dashboard por usuario.
+- **Empresas**: Trabajadores asignables a una empresa.
+- **Departamentos**: Trabajadores asignables a un departamento.
+- **Exportaciones**: Excel, TXT y PDF.
+- **Registro de acceso/login**: Email, NIF, nombre de usuario, identificador numérico. Validaciones específicas para cada uno, y unicidad entre usuarios activos.
+- **Datos adicionales en fichajes y logins:** usuario que accede, IP, posible localización GPS, dispositivo, etc.
+- **Auditoría de logins**: éxito/fallo, usuario, valor utilizado, IP, país, navegador, dispositivo.
+
+
+---
+
 ## Entorno de Desarrollo
 - **SO**: Máquina Virtual Linux (Ubuntu 24)
 - **Servidor Web**: Apache/2.4.58
@@ -117,7 +164,7 @@ rdp/
 
 ## URLs del Sistema
 
-- `http://www.registrodepresencia.com`
+- `https://www.registrodepresencia.com`
 
 
 ## Contribuciones

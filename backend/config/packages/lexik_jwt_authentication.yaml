@@ -1,0 +1,8 @@
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%' # Ruta a la clave privada
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%' # Ruta a la clave pública
+    pass_phrase: '%env(JWT_PASSPHRASE)%' # Frase de paso para la clave privada
+    token_ttl: '%env(int:JWT_TOKEN_TTL)%'  # Tiempo de vida del token en segundos
+    user_id_claim: sub # Campo del token que contiene la identidad
+    encoder:
+        signature_algorithm: RS256 # Algoritmo de firma explícito

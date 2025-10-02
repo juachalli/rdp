@@ -1,0 +1,11 @@
+nelmio_cors:
+    defaults:
+        origin_regex: '%env(bool:CORS_ORIGIN_REGEX)%'
+        allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
+        allow_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] # Métodos HTTP más comunes para APIs RESTful
+        allow_headers: ['Accept', 'Content-Type', 'Authorization', 'X-Requested-With'] # Permite encabezados necesarios para solicitudes API modernas
+        expose_headers: ['Authorization', 'Content-Disposition', 'Link', 'X-Total-Count', 'X-RateLimit-Remaining'] # Encabezados expuestos al cliente
+        allow_credentials: true #  Indica que se deben enviar los tokens JWT en el header con credentials: include.
+        max_age: 3600 # Tiempo máximo en segundos que el navegador puede almacenar la respuesta CORS.
+    paths:
+        '^/': null
