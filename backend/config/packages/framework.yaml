@@ -1,0 +1,18 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+    http_method_override: true
+    session:
+        enabled: false # Desactiva el sistema de sesiones, ya que usamos JWT y no necesitamos sesiones
+    csrf_protection: false # Desactiva la protección CSRF, ya que no es necesaria para APIs RESTful
+    form: false # Desactiva el componente de formularios, ya que no es necesario para APIs RESTful
+    router:
+        utf8: true # Asegura que las rutas acepten caracteres UTF-8 (útil para nombres, slugs, etc.).
+    trusted_hosts: ['^api\.miapp\.com$', '^localhost$', '^127\.0\.0\.1$'] # Limita los hosts confiables para evitar ataques de host header
+
+when@test:
+    framework:
+        test: true
+        session:
+            enabled: false
+

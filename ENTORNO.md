@@ -136,6 +136,35 @@ sudo mv composer.phar /usr/local/bin/composer
 # En nuestro caso indica => Composer (version 2.8.12) successfully installed 
 ```
 
+La versión instalada también la podemos saber mediante el comando:
+```bash
+composer --v
+# En nuestro caso indica:
+# Composer version 2.8.12 2025-09-19 13:41:59
+# PHP version 8.3.6 (/usr/bin/php8.3)
+```
+
+---
+
+## Symfony CLI version 5.15.0
+
+Vamos a instalar **`Symfony`**, siguiendo las instrucciones que nos indican en la página oficial
+- https://symfony.com/download
+
+```bash
+# Debian/Ubuntu — APT based Linux
+sudo apt install curl
+curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
+sudo apt install symfony-cli
+```
+
+Comprobamos la versión instalada, mediante el comando:
+```bash
+symfony --v
+# En nuestro caso indica:
+#Symfony CLI version 5.15.0 (c) 2021-2025 Fabien Potencier (2025-09-30T20:17:16Z - stable)
+```
+
 ---
 
 ## Node.js v24.9.0 y npm 11.6.0
@@ -208,7 +237,7 @@ git remote -v
 4. **Subimos los cambios a la rama main que es en la que estamos:**
 ```bash
 git add .
-git commit -m "Primer commit con la estructura inicial"	
+git commit -m "20251002 - Primer commit con la estructura inicial"	
 git push -u origin main
 ```
  
