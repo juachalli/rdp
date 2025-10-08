@@ -58,14 +58,30 @@ rdp/
 
 ## Instalaciones para el Backend
 
-### 1. Creamos el proyecto backend:
+### Prerequisitos
+- **Base de Datos**: MySQL 8.0.43
+- **PHP**: PHP 8.3.6
+- **Composer**: Composer 2.8.12
+- **Symfony CLI**: Version 5.12.0
+
+### 1. Creamos el proyecto Symfony backend (API pura):
 ```bash
+# Utilizando Symfony CLI
 cd backend
 symfony new .
 # Cuando termine nos indicará algo similar a:
 # [OK] Your project is now ready in /var/www/html/rdp/backend
+# NOTA: 
+# Si no tuviéramos instalado Symfony CLI
+composer create-project symfony/skeleton backend
 ```
-	
+
+Si no tuviéramos instalado Symfony CLI
+
+```bash
+composer create-project symfony/skeleton backend
+```
+
 ### 2. Instalamos los paquetes que vamos a necesitar:
    
 #### 2.1 => Componentes de base de datos
@@ -78,54 +94,83 @@ composer require symfony/orm-pack
 
 Paquetes incluidos en symfony/orm-pack (y algunas dependencias adicionales)
 
-- doctrine/orm
+- **doctrine/orm**
 
 	El núcleo de Doctrine ORM, que permite mapear entidades a tablas de base de datos y realizar consultas.
 
-- doctrine/doctrine-bundle
+- **doctrine/doctrine-bundle**
 
 	Integra Doctrine ORM con Symfony. Proporciona configuraciones predeterminadas, comandos de consola (doctrine:schema:update, doctrine:migrations:migrate, etc.) y servicios para trabajar con Doctrine en Symfony.
 
-- doctrine/doctrine-migrations-bundle
+- **doctrine/doctrine-migrations-bundle**
 
 	Permite gestionar migraciones de base de datos en Symfony. Es útil para versionar cambios en el esquema de la base de datos.
 
-- doctrine/dbal
+- **doctrine/dbal**
 
 	La capa de abstracción de base de dades
 
-- **Creamos la base de datos**
+- **=> Creamos la base de datos <=**
 
 	Para crear la base de datos podemos utilizar la herramienta
 
-	```bash
-	php bin/console doctrine:database:create
-	```
+```bash
+php bin/console doctrine:database:create
+```
 
-	Aunque yo prefiero crearla manualmente
-	```bash
-	sudo mysql
-		CREATE USER 'db_user'@'%' IDENTIFIED BY 'db_password';
-		CREATE DATABASE db_name;
-		GRANT ALL PRIVILEGES ON db_name.* TO 'db_user'@'%';
-		EXIT
-	```
+Aunque yo prefiero crearla manualmente
+
+```bash
+sudo mysql
+	CREATE USER 'db_user'@'%' IDENTIFIED BY 'db_password';
+	CREATE DATABASE db_name;
+	GRANT ALL PRIVILEGES ON db_name.* TO 'db_user'@'%';
+	EXIT
+```
 
 - **Configuramos la conexión a la base de datos**
 
 	Hacemos una copia del archivo `.env` a un archivo llamado `env.local`. Editamos ese archivo para configurar la conexión a nuestra base de datos MySQL.
 
-	```
-	DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=8.0.43&charset=utf8mb4"
-	```
+```
+DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=8.0.43&charset=utf8mb4"
+```
 
 - **Validamos que hay conexión**
 
-	```bash
-	symfony console doctrine:schema:validate; 
-	```
+```bash
+symfony console doctrine:schema:validate;
+# Obtendremos algo similar a:
+# Mapping
+# -------
+# [OK] The mapping files are correct.
+# Database
+# --------
+# [OK] The database schema is in sync with the mapping files.
+```                                                             
 
-#### 2.2 => Instalar seguridad y autenticación
+#### 2.2 => Herramientas de desarrollo
+
+Esenciales para el desarrollo eficiente y ayuda en la generación de código
+
+```bash
+# Generador de código
+composer require symfony/maker-bundle --dev
+```
+
+Nos da acceso a una serie de comandos y herramientas que nos permiten la generación de código automáticamente:
+
+```
+symfony console...
+Entidades (make:entity)
+Controladores (make:controller)
+Formularios (make:form)
+Servicios (make:service)
+Autenticación (make:auth, make:user, make:registration-form, etc.)
+Migraciones (make:migration)
+```
+
+#### 2.3 => Instalar seguridad y autenticación
 
 Importantes para la gestión de roles, la autenticación de usuarios y la autenticación JWT basada en tokens.
 
@@ -172,7 +217,11 @@ lexik_jwt_authentication:
         signature_algorithm: RS256 # Algoritmo de firma explícito
 ```
 
-#### 2.3 => API
+Actualitzamos la configuración de seguridad en `config/packages/security.yaml` para incluir la autenticación mediante JWT:
+
+
+
+#### 2.4 => API
 
 Fundamental para permitir comunicación entre el Frontend Vue y el Backend Symfony de manera segura.
 
@@ -200,7 +249,7 @@ nelmio_cors:
 ```
 
 
-#### 2.4 => Instalar validación y serialización
+#### 2.5 => Instalar validación y serialización
 
 Importantes para validar datos de entrada y para serializar objetos a JSON.
 	```bash
@@ -210,24 +259,59 @@ Importantes para validar datos de entrada y para serializar objetos a JSON.
 	composer require symfony/serializer	
 	```	
 
-#### 2.5 => Herramientas de desarrollo
+Una vez instalados los componentes, actualizamos el fichero `config/packages/validator.yaml`
 
-Esenciales para el desarrollo eficiente y ayuda en la generación de código
+```bash
+framework:
+    validation:
+        # Enables validator auto-mapping support.
+        # For instance, basic validation constraints will be inferred from Doctrine's metadata.
+        auto_mapping:
+            App\Entity\: []
+        # Enable PHP 8 attributes support for validation (recommended).
+        # If you prefer docblock annotations, install doctrine/annotations and
+        # remove or change this option accordingly.
+        enable_attributes: true
+        # Optional: configure mapping paths for YAML/XML/CSV validation mappings
+        # mapping:
+        #     paths: ['%kernel.project_dir%/config/validator/']
 
-	```bash
-	# Generador de código
-	composer require symfony/maker-bundle --dev
-	```
+when@test:
+    framework:
+        validation:
+            not_compromised_password: false
+```
+
+
+También podríamos haber instalado el paquete `composer require symfony/serializer-pack`
+
+````bash
+composer require symfony/serializer-pack
+````
+
+**¿Qué es?**
+- Es un **"meta-paquete"** que agrupa diversos componentes relacionados con la serialización
+
+**¿Que incluye automáticamente?**
+- `symfony/serializer` (componente core)
+- `symfony/property-access` (acceso a las propiedades)
+- `symfony/property-info` (información de propiedades)
+- `phpdocumentor/reflection-docblock` (para a anotaciones)
+- `doctrine/annotations` (para anotaciones Doctrine)
+
+---
 
 #### 2.6 => Funcionalidades adicionales (No instaladas)
 
 -  **Utilidades**
 Proporcionan funcionalidades importantes como soporte multiidioma, gestión de ficheros, logging
 	```bash
-	# Bundle de traducción para soporte multiidioma
+	# Bundle de traducción para soporte multiidioma => No es necesario ya es una API y de eso se encarga el FrontEnd
 	composer require symfony/translation
 	# Bundle para subir y gestionar ficheros (justificantes, adjuntos)
 	composer require vich/uploader-bundle
+	# Spout - Para exportar a fitxers CSV/Excel
+	composer require box/spout  	
 	# Logger para logs
 	composer require symfony/monolog-bundle	
 	```	
@@ -241,7 +325,7 @@ Cruciales para el envío de correos electrónicos y la verificación de emails e
 	composer require symfonycasts/verify-email-bundle
 	```	
 	
--  **Herramientas de desarrollo**
+-  **Herramientas de testing y optimización**
 Esenciales para el desarrollo eficiente, la generación de código, las pruebas unitarias y el análisis de código.
 	```bash
 	# Testing
@@ -250,27 +334,30 @@ Esenciales para el desarrollo eficiente, la generación de código, las pruebas 
 	composer require psalm/plugin-symfony --dev
 	```	
 
--  **Opcionalmente (de momento no se instalarán)**
+-  **Opciones que al ser una API puera no se instalan**
+
 	```bash
+	# Instalar API Platform o paquetes relacionados para crear la API REST.
+	# No lo instalamos porque vamos a hacer la implementación manuLMENTE
+	composer require api
+
 	# Instalar twig para plantillas si se necesita (aunque el frontend será Vue, puede ser útil para emails o páginas corporativas):
 	composer require twig
 
-	# Instalar API Platform o paquetes relacionados para crear la API REST:
-	composer require api
-
-	# Formulario (por si necesitas formularios en el backend)
+	# Formularios (por si necesitas formularios en el backend)
 	composer require symfony/form
 	```	
 
 - **Sugerencias adicionales**
+
 	```bash
-	# Documentación de la API. Esto te permite generar documentación Swagger/OpenAPI automáticamente.
+	# Documentación de la API. Esto permite generar documentación Swagger/OpenAPI automáticamente.
 	composer require nelmio/api-doc-bundle
 	
-	# Rate Limiting (limitación de peticiones) si te preocupa la seguridad y el abuso de la API:
+	# Rate Limiting (limitación de peticiones) si nos preocupa la seguridad y el abuso de la API:
 	composer require symfony/rate-limiter
 
-	# Cache si vas a manejar datos que se pueden cachear (por ejemplo, configuraciones, catálogos, etc.):
+	# Cache si necesitamos manejar datos que se pueden cachear (por ejemplo, configuraciones, catálogos, etc.):
 	composer require symfony/cache
 	```	
 

@@ -1,0 +1,28 @@
+# LO MANTENEMOS DE EJEMPLO PERO NO SE USA
+
+
+
+
+# Example validation mapping for App\Entity\User (YAML)
+# Place constraints per property here. Symfony will load this mapping automatically
+# when the mapping.paths config points to this folder.
+
+# App\Entity\User:
+#   properties:
+#     email:
+#       - Email: { message: "El email '{{ value }}' no es válido." }
+#       - NotBlank: { message: "El email no puede estar vacío." }
+#     username:
+#       - NotBlank: { message: "El nombre de usuario no puede estar vacío." }
+#       - Length: { min: 3, max: 50, minMessage: "El nombre de usuario debe tener al menos {{ limit }} caracteres.", maxMessage: "El nombre de usuario no puede exceder {{ limit }} caracteres." }
+#     password:
+#       - NotBlank: { message: "La contraseña no puede estar vacía." }
+#       - Length: { min: 8, minMessage: "La contraseña debe tener al menos {{ limit }} caracteres." }
+#     telefono:
+#       - Regex: { pattern: '/^\\+?[0-9]{7,15}$/', message: "El teléfono no es válido. Use solo dígitos y un prefijo opcional '+'" }
+
+# You can also define constraints at the class level, e.g. unique fields, custom callbacks, etc.
+# Example of class constraint using UniqueEntity (requires doctrine/orm and Symfony validator bridge):
+#  - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+#      fields: [email]
+#      message: "Este email ya está en uso."

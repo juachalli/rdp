@@ -8,4 +8,4 @@ nelmio_cors:
         allow_credentials: true #  Indica que se deben enviar los tokens JWT en el header con credentials: include.
         max_age: 3600 # Tiempo máximo en segundos que el navegador puede almacenar la respuesta CORS.
     paths:
-        '^/': null
+        '^/': null # También se podría haber puesto  '^/': ~

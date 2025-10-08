@@ -2,8 +2,15 @@ framework:
     validation:
         # Enables validator auto-mapping support.
         # For instance, basic validation constraints will be inferred from Doctrine's metadata.
-        #auto_mapping:
-        #    App\Entity\: []
+        auto_mapping:
+            App\Entity\: []
+        # Enable PHP 8 attributes support for validation (recommended).
+        # If you prefer docblock annotations, install doctrine/annotations and
+        # remove or change this option accordingly.
+        enable_attributes: true
+        # Optional: configure mapping paths for YAML/XML/CSV validation mappings
+        # mapping:
+        #     paths: ['%kernel.project_dir%/config/validator/']
 
 when@test:
     framework:
